@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KUNSTHAL NOORD | Contemporary Art & Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dutch-orange: #FF4C00; /* Subtle nod to heritage */
+            --off-white: #F7F7F5;
+            --charcoal: #1A1A1A;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--off-white);
+            color: var(--charcoal);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, .brand-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--off-white);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+        /* Image Hover Effects */
+        .img-zoom-container {
+            overflow: hidden;
+        }
+        .img-zoom {
+            transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .group:hover .img-zoom {
+            transform: scale(1.05);
+        }
+
+        /* Marquee Animation */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Utility for diagonal lines background */
+        .bg-diagonal {
+            background-image: repeating-linear-gradient(
+                45deg,
+                #F7F7F5,
+                #F7F7F5 10px,
+                #E5E5E5 10px,
+                #E5E5E5 11px
+            );
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Mobile Menu Transition */
+        #mobile-menu {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-black selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 mix-blend-difference text-white">
+        <div class="px-6 py-6 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="text-2xl font-bold tracking-tighter brand-font z-50 relative hover:opacity-70 transition-opacity">
+                KUNSTHAL<br>NOORD
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-12 text-sm font-medium tracking-wide uppercase">
+                <a href="#exhibitions" class="hover:underline decoration-1 underline-offset-4">Exhibitions</a>
+                <a href="#collection" class="hover:underline decoration-1 underline-offset-4">Collection</a>
+                <a href="#visit" class="hover:underline decoration-1 underline-offset-4">Visit</a>
+                <a href="#" class="hover:underline decoration-1 underline-offset-4">Shop</a>
+            </div>
+
+            <!-- Ticket Button (Desktop) -->
+            <button onclick="openTicketModal()" class="hidden md:block border border-white px-6 py-2 text-sm uppercase tracking-wider hover:bg-white hover:text-black transition-colors duration-300">
+                Get Tickets
+            </button>
+
+            <!-- Mobile Menu Button -->
+            <button id="menu-btn" class="md:hidden z-50 focus:outline-none">
+                <i data-lucide="menu" class="w-8 h-8"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Full Screen Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black text-[#F7F7F5] z-40 transform translate-x-full flex flex-col justify-center px-8">
+        <div class="flex flex-col space-y-6 text-4xl font-light brand-font">
+            <a href="#exhibitions" class="menu-link hover:text-gray-400 transition-colors">Exhibitions</a>
+            <a href="#collection" class="menu-link hover:text-gray-400 transition-colors">Collection</a>
+            <a href="#visit" class="menu-link hover:text-gray-400 transition-colors">Visit</a>
+            <a href="#" class="menu-link hover:text-gray-400 transition-colors">Shop</a>
+            <a href="#" class="menu-link hover:text-gray-400 transition-colors">Journal</a>
+        </div>
+        <div class="mt-12 pt-12 border-t border-gray-800 grid grid-cols-2 gap-4 text-sm text-gray-400">
+            <div>
+                <p>Museumplein 10</p>
+                <p>1071 DJ Amsterdam</p>
+            </div>
+            <div>
+                <p>Open Daily</p>
+                <p>10:00 - 18:00</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen w-full overflow-hidden flex items-end pb-12 md:pb-24">
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0">
+            <img 
+                src="https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=2080&auto=format&fit=crop" 
+                alt="Abstract minimalist architecture" 
+                class="w-full h-full object-cover grayscale contrast-125 brightness-90"
+            >
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="container mx-auto px-6 relative z-10 text-white mix-blend-difference">
+            <div class="border-t border-white/50 pt-6 flex flex-col md:flex-row justify-between items-start md:items-end">
+                <div class="max-w-2xl">
+                    <p class="text-sm uppercase tracking-widest mb-4">Est. 1924 — Amsterdam</p>
+                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-medium leading-[0.9] brand-font">
+                        FORM<br>
+                        FOLLOWS<br>
+                        FICTION
+                    </h1>
+                </div>
+                <div class="mt-8 md:mt-0 flex flex-col items-start md:items-end">
+                    <div class="animate-spin-slow mb-4 hidden md:block">
+                        <i data-lucide="arrow-down-right" class="w-12 h-12"></i>
+                    </div>
+                    <p class="text-right hidden md:block max-w-xs text-sm leading-relaxed">
+                        Discover the intersection of Dutch modernism and contemporary digital art in a space designed for reflection.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Running Marquee -->
+    <div class="bg-black text-[#F7F7F5] py-4 border-y border-white/10 overflow-hidden">
+        <div class="marquee-container">
+            <div class="marquee-content text-sm md:text-base uppercase tracking-widest font-medium">
+                New Exhibition Opening Soon &nbsp; • &nbsp; De Stijl Reloaded &nbsp; • &nbsp; Photography by Piet Zwart &nbsp; • &nbsp;  Experimental Typography &nbsp; • &nbsp;  Modern Living &nbsp; • &nbsp; New Exhibition Opening Soon &nbsp; • &nbsp; De Stijl Reloaded &nbsp; • &nbsp;
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <main class="bg-[#F7F7F5]">
+        
+        <!-- Current Exhibitions -->
+        <section id="exhibitions" class="py-24 md:py-32 px-6 container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal">
+                <h2 class="text-4xl md:text-6xl font-medium tracking-tight">Current<br>Exhibitions</h2>
+                <a href="#" class="hidden md:flex items-center gap-2 border-b border-black pb-1 hover:gap-4 transition-all duration-300">
+                    View Archive <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <!-- Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-y-16 md:gap-8">
+                
+                <!-- Item 1 (Large) -->
+                <div class="md:col-span-8 group cursor-pointer reveal">
+                    <div class="img-zoom-container aspect-[4/3] md:aspect-[16/9] mb-6 relative bg-gray-200">
+                        <div class="absolute top-4 left-4 bg-white px-3 py-1 text-xs font-bold uppercase tracking-wide z-10">Now Showing</div>
+                        <img src="https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=1000&auto=format&fit=crop" 
+                             class="w-full h-full object-cover img-zoom grayscale group-hover:grayscale-0 transition-all duration-700" alt="Art piece">
+                    </div>
+                    <div class="flex justify-between items-start border-t border-black pt-4">
+                        <div>
+                            <h3 class="text-2xl md:text-3xl font-medium mb-1">The Void & The Volume</h3>
+                            <p class="text-gray-500">Main Hall • Until Oct 31</p>
+                        </div>
+                        <span class="border border-black rounded-full p-2 group-hover:bg-black group-hover:text-white transition-colors">
+                            <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Item 2 (Narrow) -->
+                <div class="md:col-span-4 group cursor-pointer mt-12 md:mt-0 reveal">
+                    <div class="img-zoom-container aspect-[3/4] mb-6 relative bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1507643179173-617d67462fd3?q=80&w=1000&auto=format&fit=crop" 
+                             class="w-full h-full object-cover img-zoom grayscale group-hover:grayscale-0 transition-all duration-700" alt="Portrait">
+                    </div>
+                    <div class="flex justify-between items-start border-t border-black pt-4">
+                        <div>
+                            <h3 class="text-2xl font-medium mb-1">Dutch Light</h3>
+                            <p class="text-gray-500">Gallery 2 • Until Nov 15</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3 (Medium) -->
+                <div class="md:col-span-5 group cursor-pointer reveal">
+                    <div class="img-zoom-container aspect-square mb-6 relative bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=1000&auto=format&fit=crop" 
+                             class="w-full h-full object-cover img-zoom grayscale group-hover:grayscale-0 transition-all duration-700" alt="Abstract Art">
+                    </div>
+                    <div class="flex justify-between items-start border-t border-black pt-4">
+                        <div>
+                            <h3 class="text-2xl font-medium mb-1">Bauhaus Echoes</h3>
+                            <p class="text-gray-500">Design Wing • Permanent</p>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Item 4 (Text/Graphic) -->
+                 <div class="md:col-span-7 bg-black text-[#F7F7F5] p-8 md:p-12 flex flex-col justify-between reveal group cursor-pointer min-h-[400px]">
+                    <div class="flex justify-between items-start">
+                        <span class="text-sm uppercase tracking-widest border border-white/30 px-3 py-1">Workshop</span>
+                        <i data-lucide="move-right" class="w-8 h-8 opacity-0 group-hover:opacity-100 transform -translate-x-4 group-hover:translate-x-0 transition-all"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-4xl md:text-5xl font-medium leading-tight mb-6">
+                            Typography<br>as Architecture
+                        </h3>
+                        <p class="text-gray-400 max-w-md">
+                            Join guest curator Wim Crouwel Jr. for a masterclass in grid-based design and experimental layouts.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- About / Philosophy (Diagonal Background) -->
+        <section id="collection" class="py-24 bg-diagonal border-t border-black">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    <div class="reveal">
+                        <p class="text-sm font-bold uppercase tracking-widest mb-6 text-gray-500">Philosophy</p>
+                        <h2 class="text-3xl md:text-5xl leading-[1.1] mb-8 brand-font">
+                            "We believe art is not a mirror to reflect reality, but a hammer with which to shape it."
+                        </h2>
+                        <p class="text-lg text-gray-700 leading-relaxed mb-8">
+                            KUNSTHAL NOORD focuses on the raw, the structural, and the minimal. Located in a repurposed industrial shipping warehouse, our space is as much a part of the exhibition as the works themselves.
+                        </p>
+                        <a href="#" class="inline-block bg-black text-white px-8 py-4 text-sm uppercase tracking-widest hover:bg-[#FF4C00] transition-colors">
+                            Read Our Story
+                        </a>
+                    </div>
+                    <div class="relative reveal delay-100">
+                        <div class="aspect-[4/5] bg-gray-300 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1545989253-02cc26577f88?q=80&w=1000&auto=format&fit=crop" 
+                                 class="w-full h-full object-cover" alt="Museum Interior">
+                        </div>
+                        <!-- Floating Element -->
+                        <div class="absolute -bottom-8 -left-8 bg-white p-6 shadow-xl hidden md:block max-w-[200px]">
+                            <p class="font-mono text-xs leading-relaxed">
+                                FIGURE 01.<br>
+                                INTERIOR VIEW<br>
+                                HALL C SOUTH
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visitor Information & Tickets -->
+        <section id="visit" class="bg-black text-[#F7F7F5] py-24">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 border-t border-white/20 pt-12">
+                    
+                    <!-- Column 1: Hours -->
+                    <div class="reveal">
+                        <h4 class="text-xl font-medium mb-6 flex items-center gap-2">
+                            <i data-lucide="clock" class="w-5 h-5"></i> Opening Hours
+                        </h4>
+                        <ul class="space-y-4 text-gray-400 font-light">
+                            <li class="flex justify-between border-b border-white/10 pb-2">
+                                <span>Mon - Wed</span>
+                                <span>10:00 - 18:00</span>
+                            </li>
+                            <li class="flex justify-between border-b border-white/10 pb-2 text-white">
+                                <span>Thursday</span>
+                                <span>10:00 - 21:00</span>
+                            </li>
+                            <li class="flex justify-between border-b border-white/10 pb-2">
+                                <span>Fri - Sun</span>
+                                <span>10:00 - 19:00</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 2: Location -->
+                    <div class="reveal delay-100">
+                        <h4 class="text-xl font-medium mb-6 flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-5 h-5"></i> Location
+                        </h4>
+                        <address class="not-italic text-gray-400 font-light leading-loose mb-6">
+                            KUNSTHAL NOORD<br>
+                            NDSM-Plein 28<br>
+                            1033 WB Amsterdam<br>
+                            The Netherlands
+                        </address>
+                        <a href="#" class="text-sm underline underline-offset-4 hover:text-white transition-colors">Get Directions via Google Maps</a>
+                    </div>
+
+                    <!-- Column 3: Quick Ticket -->
+                    <div class="reveal delay-200">
+                        <h4 class="text-xl font-medium mb-6 flex items-center gap-2">
+                            <i data-lucide="ticket" class="w-5 h-5"></i> Plan Your Visit
+                        </h4>
+                        <div class="bg-white/5 p-6 border border-white/10">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-2xl font-light">€17.50</span>
+                                <span class="text-xs uppercase border border-white/30 px-2 py-1 rounded">Adult</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mb-6">Students & Youth under 18 enter free.</p>
+                            <button onclick="openTicketModal()" class="w-full bg-[#FF4C00] text-white py-3 text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors font-medium">
+                                Book Tickets
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#F7F7F5] text-black py-12 border-t border-black">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end">
+                <div class="mb-8 md:mb-0">
+                    <h2 class="text-4xl md:text-6xl font-bold tracking-tighter brand-font mb-2">KUNSTHAL NOORD</h2>
+                    <p class="text-sm uppercase tracking-widest opacity-60">© 2024 Foundation Kunsthal Noord</p>
+                </div>
+                <div class="flex gap-6">
+                    <a href="#" class="hover:text-[#FF4C00] transition-colors"><i data-lucide="instagram"></i></a>
+                    <a href="#" class="hover:text-[#FF4C00] transition-colors"><i data-lucide="twitter"></i></a>
+                    <a href="#" class="hover:text-[#FF4C00] transition-colors"><i data-lucide="facebook"></i></a>
+                </div>
+            </div>
+            <div class="mt-12 flex flex-wrap gap-6 text-xs uppercase tracking-wide text-gray-500">
+                <a href="#" class="hover:text-black">Privacy Policy</a>
+                <a href="#" class="hover:text-black">Terms of Service</a>
+                <a href="#" class="hover:text-black">Press</a>
+                <a href="#" class="hover:text-black">Colophon</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Ticket Modal (Hidden by default) -->
+    <div id="ticket-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeTicketModal()"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#F7F7F5] w-full max-w-md p-8 shadow-2xl">
+            <div class="flex justify-between items-center mb-8 border-b border-black pb-4">
+                <h3 class="text-2xl brand-font uppercase">Select Date</h3>
+                <button onclick="closeTicketModal()"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            
+            <form onsubmit="event.preventDefault(); simulateBooking();" class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider mb-2">Date</label>
+                    <input type="date" class="w-full bg-transparent border border-gray-400 p-3 focus:outline-none focus:border-black" required>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider mb-2">Number of Tickets</label>
+                    <select class="w-full bg-transparent border border-gray-400 p-3 focus:outline-none focus:border-black">
+                        <option>1 Adult (€17.50)</option>
+                        <option>2 Adults (€35.00)</option>
+                        <option>Family Pass (€45.00)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider mb-2">Email</label>
+                    <input type="email" placeholder="e.g. jan@example.com" class="w-full bg-transparent border border-gray-400 p-3 focus:outline-none focus:border-black" required>
+                </div>
+                
+                <button type="submit" class="w-full bg-black text-white py-4 mt-4 uppercase tracking-widest hover:bg-[#FF4C00] transition-colors">
+                    Proceed to Payment
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Notification -->
+    <div id="notification" class="fixed bottom-8 right-8 bg-[#FF4C00] text-white px-6 py-4 shadow-xl transform translate-y-32 transition-transform duration-500 z-[70]">
+        <div class="flex items-center gap-3">
+            <i data-lucide="check-circle" class="w-5 h-5"></i>
+            <span class="font-medium">Tickets added to basket</span>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        const menuIcon = menuBtn.querySelector('i');
+        let isMenuOpen = false;
+
+        menuBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('translate-x-full');
+                menuBtn.innerHTML = '<i data-lucide="x" class="w-8 h-8 text-white"></i>';
+                document.body.style.overflow = 'hidden';
+            } else {
+                mobileMenu.classList.add('translate-x-full');
+                menuBtn.innerHTML = '<i data-lucide="menu" class="w-8 h-8 text-white mix-blend-difference"></i>';
+                document.body.style.overflow = 'auto';
+            }
+            lucide.createIcons();
+        });
+
+        // Close menu when link clicked
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                isMenuOpen = false;
+                mobileMenu.classList.add('translate-x-full');
+                menuBtn.innerHTML = '<i data-lucide="menu" class="w-8 h-8 text-white mix-blend-difference"></i>';
+                document.body.style.overflow = 'auto';
+                lucide.createIcons();
+            });
+        });
+
+        // Scroll Reveal Animation
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Ticket Modal Logic
+        function openTicketModal() {
+            document.getElementById('ticket-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTicketModal() {
+            document.getElementById('ticket-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function simulateBooking() {
+            closeTicketModal();
+            const notif = document.getElementById('notification');
+            notif.classList.remove('translate-y-32');
+            setTimeout(() => {
+                notif.classList.add('translate-y-32');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
+
